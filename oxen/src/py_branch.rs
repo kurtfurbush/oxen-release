@@ -9,7 +9,7 @@ pub struct PyBranch {
 #[pymethods]
 impl PyBranch {
     #[new]
-    #[pyo3(signature = (name, commit_id, is_head))]
+    #[pyo3(signature = (name, commit_id, is_head = false))]
     pub fn new(name: String, commit_id: String, is_head: bool) -> Self {
         Self {
             _branch: Branch {

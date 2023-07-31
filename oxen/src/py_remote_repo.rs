@@ -42,7 +42,7 @@ impl PyRemoteRepo {
                 namespace: namespace.to_owned(),
                 name: repo_name.to_owned(),
                 remote: Remote {
-                    url: liboxen::api::endpoint::remote_url_from_host(
+                    url: liboxen::api::endpoint::remote_url_from_namespace_name(
                         &host, &namespace, &repo_name,
                     ),
                     name: String::from(liboxen::constants::DEFAULT_REMOTE_NAME),
@@ -141,14 +141,16 @@ impl PyRemoteRepo {
         Ok(())
     }
 
-    fn commit(&self, message: String) -> Result<(), PyOxenError> {
+    fn commit(&self, message: String) -> Result<PyCommit, PyOxenError> {
         let user_id = UserConfig::identifier()?;
         let user = UserConfig::get()?.to_user();
         let commit = NewCommitBody { message, author: user.name, email: user.email };
-        pyo3_asyncio::tokio::get_runtime().block_on(async {
+        let result = pyo3_asyncio::tokio::get_runtime().block_on(async {
             api::remote::staging::commit_staged(&self.repo, &self.revision, &user_id, &commit).await
         })?;
-        Ok(())
+        Ok(PyCommit {
+            commit: result,
+        })
     }
 
     fn log(&self) -> Result<Vec<PyCommit>, PyOxenError> {

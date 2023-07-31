@@ -1,11 +1,14 @@
 import json
 import os
 
-from typing import Optional
+from typing import Optional, List
+from pydantic import BaseModel
+
+from oxen import Branch, Commit
 from oxen import PyRemoteRepo
 
 
-class RemoteRepo:
+class RemoteRepo(BaseModel):
     """
     The RemoteRepo class allows you to interact with an Oxen repository without downloading the data locally.
 
@@ -184,7 +187,7 @@ class RemoteRepo:
         """
         return self._repo.status(path)
 
-    def commit(self, message: str):
+    def commit(self, message: str) -> Commit:
         """
         Commit the staged data in the remote repo with a message.
 
@@ -192,7 +195,7 @@ class RemoteRepo:
             message: `str`
                 The commit message.
         """
-        self._repo.commit(message)
+        return Commit.from_py(self._repo.commit(message))
 
     def log(self):
         """
@@ -200,11 +203,11 @@ class RemoteRepo:
         """
         return self._repo.log()
 
-    def branches(self):
+    def branches(self) -> List[Branch]:
         """
         List all branches for a remote repo
         """
-        return self._repo.list_branches()
+        return [Branch(name=b.name, commit_id=b.commit_id) for b in self._repo.list_branches()]
 
     def add_df_row(self, path: str, row: dict):
         """
