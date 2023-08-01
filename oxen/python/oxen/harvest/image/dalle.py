@@ -47,13 +47,24 @@ class Dalle(Harvester, BaseModel):
             size="512x512"
         )
         image_url = response['data'][0]['url']
-        extension = image_url.split('.')[-1]
-        filename = filename_from_prompt(prompt, extension)
-        urllib.request.urlretrieve(image_url, filename)
-
         return Generation(
             data_type=DataType.IMAGE,
+            prompt=prompt,
+            response=image_url
         )
     
     def _save(self, gen: Generation) -> SavedGeneration:
+        image_url = gen.response
+        extension = image_url.split('.')[-1]
+        filename = filename_from_prompt(gen.prompt, extension)
+        urllib.request.urlretrieve(image_url, filename)
+        self.remote_repo.add(filename)
+        commit = self.remote_repo.commit(f"Add {filename}")
+        entry = self.remote_repo.get_entry(filename, commit)
+        return SavedGeneration(
+            data_type=gen.data_type,
+            prompt=gen.prompt,
+            response=gen.response,
+            entry=entry
+        )
         

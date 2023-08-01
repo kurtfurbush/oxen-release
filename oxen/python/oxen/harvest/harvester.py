@@ -3,7 +3,11 @@ from pydantic import BaseModel
 from abc import ABC, abstractmethod
 from typing import Optional, Dict, Any
 
-from oxen.harvest import BaseGenerator, BaseSaver, SavedGeneration, Generation
+from .generation import Generation
+from .saved_generation import SavedGeneration
+from .base_generator import BaseGenerator
+from .base_saver import BaseSaver
+# from oxen.harvest import BaseGenerator, BaseSaver, SavedGeneration, Generation
 from oxen import RemoteRepo, Branch
 
 
@@ -12,7 +16,10 @@ class Harvester(BaseGenerator, BaseSaver, BaseModel):
     
     # If the remote_repo and branch are provided, the generation will be saved to the repo.
     remote_repo: Optional[RemoteRepo] = None
-    branch: Optional[Branch] = None
+    # branch: Optional[Branch] = None
+    
+    class Config:
+        arbitrary_types_allowed = True
     
     def __call__(
         self, prompt: str

@@ -12,6 +12,7 @@ use crate::error::PyOxenError;
 use crate::py_branch::PyBranch;
 use crate::py_commit::PyCommit;
 
+use crate::py_data_entry::PyDataEntry;
 use crate::py_staged_data::PyStagedData;
 use crate::py_paginated_dir_entries::PyPaginatedDirEntries;
 
@@ -248,6 +249,19 @@ impl PyRemoteRepo {
         match commit {
             Ok(Some(commit)) => Ok(PyCommit { commit }),
             _ => Err(PyValueError::new_err("could not get commit id {commit_id}")),
+        }
+    }
+
+    fn get_entry(&self, path: PathBuf, commit_id: &str) -> PyResult<PyDataEntry> {
+        let entry = pyo3_asyncio::tokio::get_runtime().block_on(async {
+            api::remote::entries::get_entry(&self.repo, &path, commit_id).await
+        });
+        match entry {
+            Ok(entry) => match PyDataEntry::from_meta(&self.repo, entry, commit_id) {
+                Ok(entry) => Ok(entry),
+                _ => Err(PyValueError::new_err("could not get entry url")),
+            },
+            _ => Err(PyValueError::new_err("could not get entry")),
         }
     }
 

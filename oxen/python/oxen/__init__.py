@@ -6,11 +6,11 @@ from .oxen import util
 
 # Python classes
 from oxen import auth
-from oxen import loaders
+# from oxen import loaders
 from oxen.branch import Branch
 from oxen.commit import Commit
 from oxen.dag import DAG
-from oxen.data import DataEntry, DataFrameRow, DataType
+from oxen.data import DataEntry, DataType
 from oxen.dataset import Dataset
 from oxen.local_repo import LocalRepo
 from oxen.op import Op
@@ -24,9 +24,9 @@ __all__ = [
     "DAG",
     "DataEntry",
     "Dataset",
-    "DataFrameRow",
+    # "DataFrameRow",
     "DataType",
-    "loaders",
+    # "loaders",
     "LocalRepo",
     "Op",
     "PyBranch",

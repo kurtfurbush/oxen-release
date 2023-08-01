@@ -2,7 +2,7 @@
 
 
 # Python classes
-from oxen.gen.image.dalle import Dalle
+from oxen.harvest.image.dalle import Dalle
 
 # Names of public modules we want to expose
 __all__ = [

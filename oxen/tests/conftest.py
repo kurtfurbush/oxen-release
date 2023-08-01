@@ -5,6 +5,9 @@ import uuid
 import os
 
 from oxen import LocalRepo, RemoteRepo
+from dotenv import load_dotenv
+
+load_dotenv()
 
 FORMAT = "%(levelname)s %(name)s %(asctime)-15s %(filename)s:%(lineno)d %(message)s"
 logging.basicConfig(format=FORMAT)

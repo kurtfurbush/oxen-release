@@ -5,6 +5,7 @@ pub mod py_branch;
 
 pub mod auth;
 pub mod py_commit;
+pub mod py_data_entry;
 pub mod py_dataset;
 pub mod py_entry;
 pub mod py_local_repo;
@@ -35,12 +36,14 @@ fn oxen(py: Python, m: &PyModule) -> PyResult<()> {
     // https://docs.rs/pyo3-log/latest/pyo3_log/#interaction-with-python-gil
     // pyo3_log::init();
 
-    m.add_class::<py_local_repo::PyLocalRepo>()?;
     m.add_class::<py_branch::PyBranch>()?;
-    m.add_class::<py_remote_repo::PyRemoteRepo>()?;
-    m.add_class::<py_dataset::PyDataset>()?;
-    m.add_class::<py_staged_data::PyStagedData>()?;
     m.add_class::<py_commit::PyCommit>()?;
+    m.add_class::<py_dataset::PyDataset>()?;
+    m.add_class::<py_data_entry::PyDataEntry>()?;
+    m.add_class::<py_entry::PyEntry>()?;
+    m.add_class::<py_local_repo::PyLocalRepo>()?;
+    m.add_class::<py_remote_repo::PyRemoteRepo>()?;
+    m.add_class::<py_staged_data::PyStagedData>()?;
 
     // Util Module
     let util_module = PyModule::new(py, "util")?;

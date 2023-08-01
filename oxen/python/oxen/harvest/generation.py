@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 from oxen import DataType
 
-@dataclass
+@dataclass(kw_only=True)
 class Generation:
     """Output of a single generation."""
 

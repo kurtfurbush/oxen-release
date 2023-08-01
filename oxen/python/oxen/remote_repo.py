@@ -5,10 +5,11 @@ from typing import Optional, List
 from pydantic import BaseModel
 
 from oxen import Branch, Commit
+from oxen.data import DataEntry
 from oxen import PyRemoteRepo
 
 
-class RemoteRepo(BaseModel):
+class RemoteRepo:
     """
     The RemoteRepo class allows you to interact with an Oxen repository without downloading the data locally.
 
@@ -186,6 +187,19 @@ class RemoteRepo(BaseModel):
                 will be checked for modifications
         """
         return self._repo.status(path)
+
+    def get_entry(self, path: str, commit: Commit) -> DataEntry | None:
+        """
+        Get a specific entry from the remote repo.
+
+        Args:
+            path: `str`
+                The path to the entry on the remote repo
+            commit: `Commit`
+                The commit to get the entry from
+        """
+        py_entry = self._repo.get_entry(path, commit)
+        return DataEntry(url=py_entry.url)
 
     def commit(self, message: str) -> Commit:
         """
